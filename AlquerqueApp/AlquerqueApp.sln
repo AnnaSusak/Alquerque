@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32611.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot", "AlquerqueApp\Bot.csproj", "{C1DB1364-F2C4-44F4-8AAF-5C723B0E05F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{6A65BF72-84FF-4D1F-AFD8-11B1B0C53322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{6A65BF72-84FF-4D1F-AFD8-11B1B0C53322}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot", "Bot\Bot.csproj", "{66A1B3BC-F498-4437-811B-01FBEA1FBE39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C1DB1364-F2C4-44F4-8AAF-5C723B0E05F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1DB1364-F2C4-44F4-8AAF-5C723B0E05F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1DB1364-F2C4-44F4-8AAF-5C723B0E05F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1DB1364-F2C4-44F4-8AAF-5C723B0E05F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A65BF72-84FF-4D1F-AFD8-11B1B0C53322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A65BF72-84FF-4D1F-AFD8-11B1B0C53322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A65BF72-84FF-4D1F-AFD8-11B1B0C53322}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A65BF72-84FF-4D1F-AFD8-11B1B0C53322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66A1B3BC-F498-4437-811B-01FBEA1FBE39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A1B3BC-F498-4437-811B-01FBEA1FBE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A1B3BC-F498-4437-811B-01FBEA1FBE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A1B3BC-F498-4437-811B-01FBEA1FBE39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
