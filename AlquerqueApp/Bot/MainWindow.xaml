@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bot"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Bot" Height="550" Width="1000" ResizeMode="NoResize">
     <Grid>
-
+        <Image Name="field"></Image>
     </Grid>
 </Window>
