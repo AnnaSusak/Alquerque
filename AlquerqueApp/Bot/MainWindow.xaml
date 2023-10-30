@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bot"
         mc:Ignorable="d"
-        Title="Bot" Height="550" Width="1000" ResizeMode="NoResize">
-    <Grid>
-        <Image Name="field"></Image>
+        Title="Bot" Height="540" Width="770" ResizeMode="NoResize">
+    <Grid Name ="grid">
+        <Canvas Name="canvas">
+            <Image Name="field"></Image>
+        </Canvas>
     </Grid>
 </Window>
