@@ -11,10 +11,13 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FilePath = System.IO.Path;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace Bot
 {
@@ -24,7 +27,69 @@ namespace Bot
         private Button[] buttons_black = new Button[12];
         private Button[] buttons_red = new Button[12];
         const int button_size = 30;
+        static bool isFinished = false;
+        static TextBlock gameInfo = new TextBlock();
         
+        public MainWindow()
+        {
+            InitializeComponent();
+            // downloading playing field
+            var directory = FilePath.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            field.Source = new BitmapImage(new Uri(FilePath.Combine(directory, "Resourses/playing_field.jpg")));
+            ArrangeButtons(509, 65, true, -68, 70);
+            ArrangeButtons(227, 360, false, 68, -70);
+            // подготовка поля для отображения текста
+            PrepareGameInfo();
+            // подготовка сетей 
+            int port = 8005;
+            string ip_address = "127.0.0.1";
+            IPAddress ip = IPAddress.Parse(ip_address);
+            IPEndPoint endPoint = new IPEndPoint(ip, port);
+            Socket client_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            client_socket.Connect(endPoint);
+            gameInfo.Text = "Вы успешно подключились к серверу!\n" +
+                "Подождите, пока другие юзеры подключаться.";
+            // поток для получения сообщений от сервера
+            Thread receiver = new Thread(GetMessageFromServer);
+            receiver.Start(client_socket);
+            // игровой процесс
+
+        }
+       void GetMessageFromServer(object obj)
+        {
+            Socket socket = (Socket)obj;
+            try
+            {
+                while (true)
+                {
+                    string message = NetLib.BasicNetMethods.ReadDateFromNet(socket);
+                    Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                    (ThreadStart)delegate ()
+                    {
+                        gameInfo.Text = message;
+                    });
+
+                }
+            }
+            catch (Exception e)
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                     (ThreadStart)delegate ()
+                     {
+                         gameInfo.Text = "[SERVER] " + e.Message;
+                     });
+                socket.Close();
+                isFinished = true;
+            }
+        }
+        void PrepareGameInfo()
+        {
+            gameInfo.VerticalAlignment = VerticalAlignment.Top;
+            gameInfo.Width = 770;
+            gameInfo.Height = 65;
+            gameInfo.Background = Brushes.Yellow;
+            canvas.Children.Add(gameInfo);
+        }
         void ArrangeButtons(int start_l, int start_b, bool is_red, int change_l, int change_b)
         {
             int l = start_l;
@@ -54,15 +119,6 @@ namespace Bot
                     buttons_black[i - 1] = b;
                 }
             }
-        }
-        public MainWindow()
-        {
-            InitializeComponent();
-            // downloading playing field
-            var directory = FilePath.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            field.Source = new BitmapImage(new Uri(FilePath.Combine(directory, "Resourses/playing_field.jpg")));
-            ArrangeButtons(509, 85, true, -68, 70);
-            ArrangeButtons(237, 370, false, 68, -70);
         }
     }
 }
