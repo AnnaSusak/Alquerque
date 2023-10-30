@@ -13,3 +13,6 @@ D:\ANNA\USB\Alquerque\AlquerqueApp\Server\obj\Debug\net6.0\refint\Server.dll
 D:\ANNA\USB\Alquerque\AlquerqueApp\Server\obj\Debug\net6.0\Server.pdb
 D:\ANNA\USB\Alquerque\AlquerqueApp\Server\obj\Debug\net6.0\Server.genruntimeconfig.cache
 D:\ANNA\USB\Alquerque\AlquerqueApp\Server\obj\Debug\net6.0\ref\Server.dll
+D:\ANNA\USB\Alquerque\AlquerqueApp\Server\bin\Debug\net6.0\NetLib.dll
+D:\ANNA\USB\Alquerque\AlquerqueApp\Server\bin\Debug\net6.0\NetLib.pdb
+D:\ANNA\USB\Alquerque\AlquerqueApp\Server\obj\Debug\net6.0\Server.csproj.CopyComplete

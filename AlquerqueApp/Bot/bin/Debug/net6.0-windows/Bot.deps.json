@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "Bot/1.0.0": {
+        "dependencies": {
+          "NetLib": "1.0.0"
+        },
         "runtime": {
           "Bot.dll": {}
+        }
+      },
+      "NetLib/1.0.0": {
+        "runtime": {
+          "NetLib.dll": {}
         }
       }
     }
   },
   "libraries": {
     "Bot/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "NetLib/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
