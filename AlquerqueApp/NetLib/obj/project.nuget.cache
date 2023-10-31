@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "J4Nd2aVj9UAar2QXVVhsIRihsBdQlaRicLOQD+IBC8pBb87ILq3JjUO2D2Blo0g+uD9/Z18N8JvtXQoi5gqfYw==",
+  "dgSpecHash": "wjfBZ/+3P4X86TUNPYK1PCSEO3XIdHtDBl6HMpnwCYnuZhQA3UAomcbAYl13ZrQCeChCyrM+bD9Y2cIoeRFw2A==",
   "success": true,
-  "projectFilePath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj",
+  "projectFilePath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

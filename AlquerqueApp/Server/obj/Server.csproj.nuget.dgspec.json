@@ -4,12 +4,12 @@
     "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\Server\\Server.csproj": {}
   },
   "projects": {
-    "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj": {
+    "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj",
-        "projectName": "NetLib",
-        "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj",
+        "projectUniqueName": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj",
+        "projectName": "Lib",
+        "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj",
         "packagesPath": "C:\\Users\\BSLAY\\.nuget\\packages\\",
         "outputPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\obj\\",
         "projectStyle": "PackageReference",
@@ -93,8 +93,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj": {
-                "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj"
+              "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj": {
+                "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj"
               }
             }
           }

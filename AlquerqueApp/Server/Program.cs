@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Threading;
 using Server.Classes;
+using System.Diagnostics.SymbolStore;
+
 public class Program
 {
     static List<Bot> botsWithoutGroup = new List<Bot>();
@@ -38,7 +40,16 @@ public class Program
                 Bot b = botsWithoutGroup[i];
                 bot_group.Add(b);
                 Console.WriteLine($"[SERVER] пользователь {b.Name} добавлен в группу {bot_groups.Count + 1}.");
-                NetLib.BasicNetMethods.SendDataToNet(b.Socket, "Вас успешно добавили в группу.");
+                if (i % 2 ==0)
+                {
+                    b.Color = Color.Red;
+                    NetLib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_RED);
+                } else
+                {
+                    b.Color = Color.Black;
+                    NetLib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_BLACK);
+                }
+               
             }
             bot_groups.Add(bot_group);
             foreach (var b in bot_group)
@@ -67,9 +78,23 @@ public class Program
         }
         try
         {
+            Random r = new Random();
             while (true)
             {
-               // процесс игры
+                // процесс игры  
+                int num = r.Next(0, 1);
+                bool red_move = num == 1;
+                foreach (var b in bot.Group)
+                {
+                    if (red_move && b.Color == Color.Red)
+                    {
+                        NetLib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
+                    }
+                    else if(!red_move && b.Color == Color.Black)
+                    {
+                        NetLib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
+                    }
+                }
             }
         }
         catch (Exception e)

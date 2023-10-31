@@ -14,9 +14,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj",
-      "projectName": "NetLib",
-      "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj",
+      "projectUniqueName": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj",
+      "projectName": "Lib",
+      "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj",
       "packagesPath": "C:\\Users\\BSLAY\\.nuget\\packages\\",
       "outputPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\obj\\",
       "projectStyle": "PackageReference",

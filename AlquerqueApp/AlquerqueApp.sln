@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bot", "Bot\Bot.csproj", "{66A1B3BC-F498-4437-811B-01FBEA1FBE39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetLib", "NetLib\NetLib.csproj", "{1AD89609-29F2-4AD6-BE10-2D1376D23E93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib", "NetLib\Lib.csproj", "{1AD89609-29F2-4AD6-BE10-2D1376D23E93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

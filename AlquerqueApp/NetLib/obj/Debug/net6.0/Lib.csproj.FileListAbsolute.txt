@@ -1,0 +1,12 @@
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\bin\Debug\net6.0\Lib.deps.json
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\bin\Debug\net6.0\Lib.dll
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\bin\Debug\net6.0\Lib.pdb
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.csproj.AssemblyReference.cache
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.GeneratedMSBuildEditorConfig.editorconfig
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.AssemblyInfoInputs.cache
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.AssemblyInfo.cs
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.csproj.CoreCompileInputs.cache
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.dll
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\refint\Lib.dll
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\Lib.pdb
+D:\ANNA\USB\Alquerque\AlquerqueApp\NetLib\obj\Debug\net6.0\ref\Lib.dll

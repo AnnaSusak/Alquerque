@@ -26,9 +26,10 @@ namespace Bot
     {
         private Button[] buttons_black = new Button[12];
         private Button[] buttons_red = new Button[12];
-        const int button_size = 30;
+        const int BUTTON_SIZE = 30;
         static bool isFinished = false;
         static TextBlock gameInfo = new TextBlock();
+        static bool isRed;
         
         public MainWindow()
         {
@@ -53,7 +54,7 @@ namespace Bot
             Thread receiver = new Thread(GetMessageFromServer);
             receiver.Start(client_socket);
             // игровой процесс
-
+            
         }
        void GetMessageFromServer(object obj)
         {
@@ -63,6 +64,14 @@ namespace Bot
                 while (true)
                 {
                     string message = NetLib.BasicNetMethods.ReadDateFromNet(socket);
+                    if (message == Lib.Commands.COLOR_MESSAGE_RED)
+                    {
+                        isRed = true;
+                    }
+                    else if (message == Lib.Commands.COLOR_MESSAGE_BLACK)
+                    {
+                        isRed = false;
+                    }
                     Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                     (ThreadStart)delegate ()
                     {
@@ -97,8 +106,10 @@ namespace Bot
             for (int i = 1; i < 13; i++)
             {
                 Button b = new Button();
-                b.Width = button_size;
-                b.Height = button_size;
+                b.Width = BUTTON_SIZE;
+                b.Height = BUTTON_SIZE;
+                b.IsEnabled = false;
+                b.Content = (i - 1).ToString();
                 Canvas.SetLeft(b, l);
                 Canvas.SetBottom(b, bottom);
                 canvas.Children.Add(b);
@@ -117,6 +128,23 @@ namespace Bot
                 {
                     b.Background = Brushes.Black;
                     buttons_black[i - 1] = b;
+                }
+            }
+        }
+        void EnableButtonsForMove()
+        {
+            if (isRed)
+            {
+                foreach (var b in buttons_red)
+                {
+                    b.IsEnabled = true;
+                }
+            }
+            else
+            {
+                foreach (var b in buttons_black)
+                {
+                    b.IsEnabled = true;
                 }
             }
         }

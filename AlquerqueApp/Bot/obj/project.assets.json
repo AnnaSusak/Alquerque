@@ -2,28 +2,28 @@
   "version": 3,
   "targets": {
     "net6.0-windows7.0": {
-      "NetLib/1.0.0": {
+      "Lib/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "compile": {
-          "bin/placeholder/NetLib.dll": {}
+          "bin/placeholder/Lib.dll": {}
         },
         "runtime": {
-          "bin/placeholder/NetLib.dll": {}
+          "bin/placeholder/Lib.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "NetLib/1.0.0": {
+    "Lib/1.0.0": {
       "type": "project",
-      "path": "../NetLib/NetLib.csproj",
-      "msbuildProject": "../NetLib/NetLib.csproj"
+      "path": "../NetLib/Lib.csproj",
+      "msbuildProject": "../NetLib/Lib.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
-      "NetLib >= 1.0.0"
+      "Lib >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -59,8 +59,8 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj": {
-              "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\NetLib.csproj"
+            "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj": {
+              "projectPath": "D:\\ANNA\\USB\\Alquerque\\AlquerqueApp\\NetLib\\Lib.csproj"
             }
           }
         }

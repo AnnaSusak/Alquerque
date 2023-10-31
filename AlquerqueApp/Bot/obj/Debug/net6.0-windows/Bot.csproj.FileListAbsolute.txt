@@ -20,6 +20,6 @@ D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\obj\Debug\net6.0-windows\Bot.pdb
 D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\obj\Debug\net6.0-windows\Bot.genruntimeconfig.cache
 D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\obj\Debug\net6.0-windows\ref\Bot.dll
 D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\obj\Debug\net6.0-windows\App.baml
-D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\bin\Debug\net6.0-windows\NetLib.dll
-D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\bin\Debug\net6.0-windows\NetLib.pdb
 D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\obj\Debug\net6.0-windows\Bot.csproj.CopyComplete
+D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\bin\Debug\net6.0-windows\Lib.dll
+D:\ANNA\USB\Alquerque\AlquerqueApp\Bot\bin\Debug\net6.0-windows\Lib.pdb
