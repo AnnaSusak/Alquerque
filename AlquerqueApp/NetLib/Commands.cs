@@ -11,5 +11,7 @@ namespace Lib
         public const string COLOR_MESSAGE_RED = "Ваш цвет красный.";
         public const string COLOR_MESSAGE_BLACK = "Ваш цвет черный.";
         public const string YOUR_TURN_MESSAGE = "Ваш ход";
+        public const string OTHER_TURN_MESSAGE = "Другой игрок сходил ";
+        public const string WAIT = "wait";
     }
 }

@@ -40,14 +40,14 @@ public class Program
                 Bot b = botsWithoutGroup[i];
                 bot_group.Add(b);
                 Console.WriteLine($"[SERVER] пользователь {b.Name} добавлен в группу {bot_groups.Count + 1}.");
-                if (i % 2 ==0)
+                if (i % 2 !=0)
                 {
                     b.Color = Color.Red;
-                    NetLib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_RED);
+                    Lib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_RED);
                 } else
                 {
                     b.Color = Color.Black;
-                    NetLib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_BLACK);
+                    Lib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_BLACK);
                 }
                
             }
@@ -64,65 +64,87 @@ public class Program
     {
         Socket client_socket = (Socket)obj;
         Bot bot = new Bot(client_socket);
-        NetLib.BasicNetMethods.SendDataToNet(bot.Socket, $"Ваше имя: {bot.Name}\n");
+     //   Lib.BasicNetMethods.SendDataToNet(bot.Socket, $"Ваше имя: {bot.Name}\n");
         botsWithoutGroup.Add(bot);
         int cur_thread = Thread.CurrentThread.ManagedThreadId;
         if (botsWithoutGroup.Count > 1)
         {
             //группировка
             GroupUsersIfPossible();
+            try
+            {
+                bool red_move = false;
+                bool wait = false;
+                int mv = 1;
+                Random r = new Random();
+                while (true)
+                {
+                    // процесс игры  
+                    // int num = r.Next(0, 1);
+                    // bool red_move = num == 1;
+                    
+                   for (int i = 0; i < bot.Group.Count; i++)
+                    {
+                        Bot b = bot.Group[i];
+                        if ((red_move && b.Color == Color.Red || !red_move && b.Color == Color.Black))
+                        {
+                            Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
+                            try
+                            {
+                                mv = int.Parse(Lib.BasicNetMethods.ReadDateFromNet(bot.Socket));
+                                Console.WriteLine(mv);
+                                Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
+                                red_move = !red_move;
+                            } catch(Exception e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                            
+                            for (int j = 0; j < bot.Group.Count; j++)
+                            {
+                                Bot b2 = bot.Group[j];
+                                if (red_move  && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
+                                {
+                                    Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + Lib.Commands.OTHER_TURN_MESSAGE);
+                                    
+                                }
+                            }
+                        } 
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // бот вышел, перенаправляем ботов из его группы, удаляем группу и др ненужные данные
+                Console.WriteLine(bot.Name + " -> " + e.Message);
+                Console.WriteLine($"Пользователь {bot.Name} вышел.");
+                if (bot.Group != null && bot.Group.Count > 1)
+                {
+                    foreach (var b in bot.Group)
+                    {
+                        if (b != bot)
+                        {
+                            botsWithoutGroup.Add(b);
+                            b.Group = new List<Bot>();
+                            Lib.BasicNetMethods.SendDataToNet(b.Socket, "Другой игрок из вашей группы вышел, поэтому игра закончилась." +
+                                "\nЖдите подключения другого бота.");
+                        }
+                    }
+                    bot_groups.Remove(bot.Group);
+                }
+                else
+                {
+                    botsWithoutGroup.Remove(bot);
+                }
+                client_socket.Shutdown(SocketShutdown.Both);
+                client_socket.Close();
+                GroupUsersIfPossible();
+            }
         }
         else
         {
-            NetLib.BasicNetMethods.SendDataToNet(bot.Socket, "Пока других игроков нет, ожидайте");
+            Lib.BasicNetMethods.SendDataToNet(bot.Socket, "Пока других игроков нет, ожидайте");
         }
-        try
-        {
-            Random r = new Random();
-            while (true)
-            {
-                // процесс игры  
-                int num = r.Next(0, 1);
-                bool red_move = num == 1;
-                foreach (var b in bot.Group)
-                {
-                    if (red_move && b.Color == Color.Red)
-                    {
-                        NetLib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
-                    }
-                    else if(!red_move && b.Color == Color.Black)
-                    {
-                        NetLib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            // бот вышел, перенаправляем ботов из его группы, удаляем группу и др ненужные данные
-            Console.WriteLine(bot.Name + " -> " + e.Message);
-            Console.WriteLine($"Пользователь {bot.Name} вышел.");
-            if (bot.Group != null && bot.Group.Count > 1)
-            {
-                foreach (var b in bot.Group)
-                {
-                    if (b != bot)
-                    {
-                        botsWithoutGroup.Add(b);
-                        b.Group = new List<Bot>();
-                        NetLib.BasicNetMethods.SendDataToNet(b.Socket, "Другой игрок из вашей группы вышел, поэтому игра закончилась." +
-                            "\nЖдите подключения другого бота.");
-                    }
-                }
-                bot_groups.Remove(bot.Group);
-            }
-            else
-            {
-                botsWithoutGroup.Remove(bot);
-            }
-            client_socket.Shutdown(SocketShutdown.Both);
-            client_socket.Close();
-            GroupUsersIfPossible();
-        }
+       
     }
 }

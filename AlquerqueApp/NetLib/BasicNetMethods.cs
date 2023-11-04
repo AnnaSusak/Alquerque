@@ -2,7 +2,7 @@
 using System.Text;
 using System.Net.Sockets;
 
-namespace NetLib
+namespace Lib
 {
     public class BasicNetMethods
     {
