@@ -124,17 +124,24 @@ namespace Bot
                         isRed = true;
                         my_buttons = buttons_red;
                         other_buttons = buttons_black;
+                      //  MessageBox.Show("red");
                     }
                     if (message.Contains(Lib.Commands.COLOR_MESSAGE_BLACK))
                     {
                         isRed = false;
                         my_buttons = buttons_black;
                         other_buttons = buttons_red;
+                        Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                        (ThreadStart)delegate ()
+                        {
+                            gameInfo.Background = Brushes.Beige;
+                        });
+                        /// MessageBox.Show("black");
                     }
-                    if (message.Contains(Lib.Commands.WAIT))
+                   /* if (message.Contains(Lib.Commands.WAIT))
                     {
-                        Thread.Sleep(5000);
-                    }
+                        Thread.Sleep(6000);
+                    }*/
                     if (message.Contains(Lib.Commands.YOUWIN))
                     {
                         MessageBox.Show("You win!");
@@ -151,7 +158,7 @@ namespace Bot
                                 if (enabled_inds.Count == 0)
                                 {
                                     MessageBox.Show("Вы проиграли");
-                                    Lib.BasicNetMethods.SendDataToNet(client_socket,Lib.Commands.ILOSE);
+                                    Lib.BasicNetMethods.SendDataToNet(client_socket,Lib.Commands.ILOSE.ToString());
                                     isFinished = true;
                                 } else
                                 {

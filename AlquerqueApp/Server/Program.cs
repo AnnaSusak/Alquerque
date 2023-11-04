@@ -76,38 +76,48 @@ public class Program
                 bool red_move = true;
                 bool wait = false;
                 int mv = 1;
+                string message = "";
                 Random r = new Random();
-              //  while (true)
-              //  {
+                while (true)
+                {
                     // процесс игры  
                     // int num = r.Next(0, 1);
                     // bool red_move = num == 1;
-                    
+                   Thread.Sleep(3000);
                    for (int i = 0; i < bot.Group.Count; i++)
                     {
-                        Bot b = bot.Group[i];
-                        if ((red_move && b.Color == Color.Red || !red_move && b.Color == Color.Black))
-                        {
-                            Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
+                            Bot b = bot.Group[i];
+                            Console.WriteLine(red_move+ " " + i.ToString());
+                          //  Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
                             try
                             {
-                                string message = Lib.BasicNetMethods.ReadDateFromNet(bot.Socket);
-                                if (message.Contains(Lib.Commands.ILOSE))
+                                //string message = Lib.BasicNetMethods.ReadDateFromNet(bot.Socket);
+                                
+                            if (red_move && bot.Color == Color.Red || !red_move && bot.Color == Color.Black)
+                                {
+
+                                    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
+                                message = Lib.BasicNetMethods.ReadDateFromNet(bot.Socket);
+                                mv = int.Parse(message);
+                                    Console.WriteLine(mv);
+                                
+                                //    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
+                                
+                                if (message.Contains(Lib.Commands.ILOSE.ToString()))
                                 {
                                     for (int j = 0; j < bot.Group.Count; j++)
                                     {
                                         Bot b2 = bot.Group[j];
                                         if (red_move && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
                                         {
-                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, Lib.Commands.YOUWIN);
-
+                                            if (b2.Color == Color.Red)
+                                                Lib.BasicNetMethods.SendDataToNet(b2.Socket, "Red win");
+                                            else
+                                                Lib.BasicNetMethods.SendDataToNet(b2.Socket, "Black win");
                                         }
                                     }
                                 } else
                                 {
-                                    mv = int.Parse(message);
-                                    Console.WriteLine(mv);
-                                    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
                                     for (int j = 0; j < bot.Group.Count; j++)
                                     {
                                         Bot b2 = bot.Group[j];
@@ -119,8 +129,9 @@ public class Program
                                     }
                                     red_move = !red_move;
                                 }
-                                
-                            } catch(Exception e)
+                            }
+
+                        } catch(Exception e)
                             {
                                 Console.WriteLine(e.Message);
                             }
@@ -128,7 +139,6 @@ public class Program
                             
                         } 
                     }
-               // }
             }
             catch (Exception e)
             {
