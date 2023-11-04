@@ -73,12 +73,12 @@ public class Program
             GroupUsersIfPossible();
             try
             {
-                bool red_move = false;
+                bool red_move = true;
                 bool wait = false;
                 int mv = 1;
                 Random r = new Random();
-                while (true)
-                {
+              //  while (true)
+              //  {
                     // процесс игры  
                     // int num = r.Next(0, 1);
                     // bool red_move = num == 1;
@@ -91,27 +91,44 @@ public class Program
                             Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
                             try
                             {
-                                mv = int.Parse(Lib.BasicNetMethods.ReadDateFromNet(bot.Socket));
-                                Console.WriteLine(mv);
-                                Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
-                                red_move = !red_move;
+                                string message = Lib.BasicNetMethods.ReadDateFromNet(bot.Socket);
+                                if (message.Contains(Lib.Commands.ILOSE))
+                                {
+                                    for (int j = 0; j < bot.Group.Count; j++)
+                                    {
+                                        Bot b2 = bot.Group[j];
+                                        if (red_move && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
+                                        {
+                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, Lib.Commands.YOUWIN);
+
+                                        }
+                                    }
+                                } else
+                                {
+                                    mv = int.Parse(message);
+                                    Console.WriteLine(mv);
+                                    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
+                                    for (int j = 0; j < bot.Group.Count; j++)
+                                    {
+                                        Bot b2 = bot.Group[j];
+                                        if (red_move && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
+                                        {
+                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + Lib.Commands.OTHER_TURN_MESSAGE);
+
+                                        }
+                                    }
+                                    red_move = !red_move;
+                                }
+                                
                             } catch(Exception e)
                             {
                                 Console.WriteLine(e.Message);
                             }
                             
-                            for (int j = 0; j < bot.Group.Count; j++)
-                            {
-                                Bot b2 = bot.Group[j];
-                                if (red_move  && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
-                                {
-                                    Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + Lib.Commands.OTHER_TURN_MESSAGE);
-                                    
-                                }
-                            }
+                            
                         } 
                     }
-                }
+               // }
             }
             catch (Exception e)
             {

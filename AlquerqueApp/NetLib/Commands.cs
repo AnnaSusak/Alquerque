@@ -13,5 +13,7 @@ namespace Lib
         public const string YOUR_TURN_MESSAGE = "Ваш ход";
         public const string OTHER_TURN_MESSAGE = "Другой игрок сходил ";
         public const string WAIT = "wait";
+        public const string ILOSE = "Я проиграл";
+        public const string YOUWIN = "Вы выиграли!";
     }
 }

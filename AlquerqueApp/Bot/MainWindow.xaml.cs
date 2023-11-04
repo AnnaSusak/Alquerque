@@ -39,7 +39,8 @@ namespace Bot
         static double empty_y = 205;
         const int width_step = 68;
         const int height_step = 70;
-        List<Button> enabled_buts;
+        // List<Button> enabled_buts;
+        List<int> enabled_inds;
         Random r = new Random();
         private Socket client_socket;
 
@@ -104,7 +105,6 @@ namespace Bot
             IPEndPoint endPoint = new IPEndPoint(ip, port);
             client_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             client_socket.Connect(endPoint);
-           // GetMessageFromServer(client_socket);
             // поток для получения сообщений от сервера
             Thread receiver = new Thread(GetMessageFromServer);
             receiver.Start(client_socket);
@@ -116,7 +116,7 @@ namespace Bot
             {
                 string message;
                 string prev_m = "";
-                while(true)
+                while(!isFinished)
                 {
                     message = Lib.BasicNetMethods.ReadDateFromNet(socket);
                     if (message.Contains(Lib.Commands.COLOR_MESSAGE_RED))
@@ -133,36 +133,38 @@ namespace Bot
                     }
                     if (message.Contains(Lib.Commands.WAIT))
                     {
-                        Thread.Sleep(2500);
+                        Thread.Sleep(5000);
+                    }
+                    if (message.Contains(Lib.Commands.YOUWIN))
+                    {
+                        MessageBox.Show("You win!");
+                        isFinished = true;
                     }
                     if (message.Contains(Lib.Commands.YOUR_TURN_MESSAGE))
                     {
                         try {
-                            enabled_buts = new List<Button>();
+                            //    enabled_buts = new List<Button>();
+                            enabled_inds = new List<int>();
                             try
                             {
-                                //Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                                //     (ThreadStart)delegate ()
-                                //     {
-                                //         Canvas.SetBottom(my_buttons[7], 200);
-                                //     });
-                                //Dispatcher.InvokeShutdown();
-                                // message = "";
-                                // break;
                                 await EnableButtons();
-                                //MessageBox.Show(enabled_buts.Count.ToString());
-                                int mv = r.Next(0, enabled_buts.Count - 1);
-                                await MakeMove(mv, true);
-                                message = "";
-                                Lib.BasicNetMethods.SendDataToNet(client_socket, mv.ToString());
+                                if (enabled_inds.Count == 0)
+                                {
+                                    MessageBox.Show("Вы проиграли");
+                                    Lib.BasicNetMethods.SendDataToNet(client_socket,Lib.Commands.ILOSE);
+                                    isFinished = true;
+                                } else
+                                {
+                                    int mv = r.Next(0, enabled_inds.Count - 1);
+                                    await MakeMove(enabled_inds[mv], true);
+                                    message = "";
+                                    Lib.BasicNetMethods.SendDataToNet(client_socket, enabled_inds[mv].ToString());
+                                }                             
                             }
                             catch (Exception e)
                             {
                                 MessageBox.Show(e.Message);
                             }
-                            // EnableButtons();
-                            //MessageBox.Show(enabled_buts.Count.ToString());
-                            //   MakeMove(7);
                         } catch (Exception e)
                         {
                             MessageBox.Show(e.Message);
@@ -173,7 +175,6 @@ namespace Bot
                         int ind = int.Parse(message.Split()[0]);
                         string a = "r";
                         if (my_buttons == buttons_red) { a = "b"; }
-                       //MessageBox.Show( a+ " " + ind.ToString());
                         await MakeMove(ind, false);
                         message = "";
                     }
@@ -227,69 +228,46 @@ namespace Bot
         }
         async Task EnableButtons()
         {
-            // for (int i = 0; i < 12; i++)
-            //  {
-           /// string a = "";
                 await Dispatcher.InvokeAsync(() =>
                 {
                     double x;
-                    double y; 
+                    double y;
+                    string a = "";
                     for (int i = 0; i < 12; i++) {
                         x = Canvas.GetLeft(my_buttons[i]);
                         y = Canvas.GetBottom(my_buttons[i]);
                         if(x == empty_x && (y - height_step == empty_y || y + height_step == empty_y))
                         {
-                            enabled_buts.Add(my_buttons[i]);
-                           // a += i + " ";
+                            enabled_inds.Add(i);
+                            a += i;
                         } else if (y == empty_y && (x - width_step == empty_x || x + width_step == empty_x))
                         {
-                            enabled_buts.Add(my_buttons[i]);
-                           // a += i + " ";
+                            enabled_inds.Add(i);
+                            a += i;
                         } else if (x + width_step == empty_x && (y - height_step == empty_y | y + height_step == empty_y))
                         {
-                            enabled_buts.Add(my_buttons[i]);
-                           // a += i + " ";
+                            enabled_inds.Add(i);
+                            a += i;
                         }
                         else if (y + height_step == empty_y && (x - width_step == empty_x | x + width_step == empty_x))
                         {
-                            enabled_buts.Add(my_buttons[i]);
-                           // a += i + " ";
+                            enabled_inds.Add(i);
+                            a += i;
                         }
                         else if (x - width_step == empty_x && (y - height_step == empty_y | y + height_step == empty_y))
                         {
-                            enabled_buts.Add(my_buttons[i]);
-                           // a += i + " ";
+                            enabled_inds.Add(i);
+                            a += i;
                         }
                         else if (y - height_step == empty_y && (x - width_step == empty_x | x + width_step == empty_x))
                         {
-                            enabled_buts.Add(my_buttons[i]);
-                           // a += i + " ";
+                            enabled_inds.Add(i);
+                            a += i;
                         }
                     }
+                  //  MessageBox.Show(a);
                 });
-          //  MessageBox.Show(a);
                 await Task.Delay(25);
-                //Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                //    (ThreadStart)delegate ()
-                //    {
-                          
-                          
-                      /*  try
-                        {
-                            MessageBox.Show(i + " " + (Canvas.GetBottom(my_buttons[i]) - height_step).ToString() + " " +
-                (Canvas.GetBottom(my_buttons[i]) + height_step).ToString() + " " +
-
-                (Canvas.GetLeft(my_buttons[i]) - width_step).ToString() + " " +
-                (Canvas.GetLeft(my_buttons[i]) + width_step).ToString());
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.Message);
-                        }
-                    });*/
-           // }
-           // await ChangePos(r.Next(0, enabled_buts.Count - 1));
-           // Dispatcher.InvokeShutdown();
         }
     }
 }
