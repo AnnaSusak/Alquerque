@@ -21,26 +21,47 @@ using System.Windows.Threading;
 
 namespace Bot
 {
-
+    public class Position
+    {
+        public double x;
+        public double y;
+        public Position(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    public class InfoForMove
+    {
+        public int ind_pos;
+        public int ind_but;
+        public InfoForMove(int pos, int ind)
+        {
+            ind_pos = pos;
+            ind_but = ind;
+        }
+    }
     public partial class MainWindow : Window
     {
-        private Button[] buttons_black = new Button[12];
-        private Button[] buttons_red = new Button[12];
-        private Button[] my_buttons;
-        private Button[] other_buttons;
-        private int[][] pos_black;
-        private int[][] pos_red;
-        private int[][] pos_my;
+        private List<Button> buttons_black = new List<Button>();
+        private List<Button> buttons_red= new List<Button>();
+        private List<Button> my_buttons= new List<Button>();
+        private List<Button> other_buttons= new List<Button>();
+      //  private int[][] pos_black;
+       // private int[][] pos_red;
+       // private int[][] pos_my;
         const int BUTTON_SIZE = 30;
         static bool isFinished = false;
         static TextBlock gameInfo = new TextBlock();
         static bool isRed;
         static double empty_x = 373;
         static double empty_y = 205;
+        List<Position> empty_pos = new List<Position>();
         const int width_step = 68;
         const int height_step = 70;
         // List<Button> enabled_buts;
-        List<int> enabled_inds;
+        // SortedDictionary<int, int> enabled_inds = new SortedDictionary<int, int>();
+        List<InfoForMove> enabled_moves = new List<InfoForMove>();
         Random r = new Random();
         private Socket client_socket;
 
@@ -52,6 +73,7 @@ namespace Bot
             field.Source = new BitmapImage(new Uri(FilePath.Combine(directory, "Resourses/playing_field.jpg")));
             ArrangeButtons(509, 65, true, -width_step, height_step);
             ArrangeButtons(227, 360, false, width_step, -height_step);
+            empty_pos.Add(new Position(373, 205));
             // подготовка поля для отображения текста
             PrepareGameInfo();
             // подготовка сетей 
@@ -80,12 +102,12 @@ namespace Bot
                 if (is_red)
                 {
                     b.Background = Brushes.Red;
-                    buttons_red[i - 1] = b;
+                    buttons_red.Add(b);
                 }
                 else
                 {
                     b.Background = Brushes.Black;
-                    buttons_black[i - 1] = b;
+                    buttons_black.Add(b);
                 }
             }
         }
@@ -151,38 +173,45 @@ namespace Bot
                     {
                         try {
                             //    enabled_buts = new List<Button>();
-                            enabled_inds = new List<int>();
+                            //    enabled_inds = new SortedDictionary<int, int>();
+                            enabled_moves = new List<InfoForMove>();
                             try
                             {
-                                await EnableButtons();
-                                if (enabled_inds.Count == 0)
+                                if (my_buttons.Count != 0)
+                                    await FindPossibleButtonIndsForMove();
+                                //   MessageBox.Show("found");
+                                MessageBox.Show(enabled_moves.Count.ToString());
+                                if (enabled_moves.Count == 0 || my_buttons.Count== 0)
                                 {
                                     MessageBox.Show("Вы проиграли");
                                     Lib.BasicNetMethods.SendDataToNet(client_socket,Lib.Commands.ILOSE.ToString());
                                     isFinished = true;
                                 } else
                                 {
-                                    int mv = r.Next(0, enabled_inds.Count - 1);
-                                    await MakeMove(enabled_inds[mv], true);
+                                    int mv = r.Next(0, enabled_moves.Count - 1);
+                                    await MakeMove(enabled_moves[mv].ind_but, enabled_moves[mv].ind_pos, true);
                                     message = "";
-                                    Lib.BasicNetMethods.SendDataToNet(client_socket, enabled_inds[mv].ToString());
+                                    Lib.BasicNetMethods.SendDataToNet(client_socket, enabled_moves[mv].ind_but + " " +
+                                        enabled_moves[mv].ind_pos.ToString());
                                 }                             
                             }
                             catch (Exception e)
                             {
-                                MessageBox.Show(e.Message);
+                                MessageBox.Show(e.Message + " " + (my_buttons == buttons_red));
                             }
                         } catch (Exception e)
                         {
-                            MessageBox.Show(e.Message);
+                            MessageBox.Show(e.Message + " " + (my_buttons == buttons_red));
                         }
 
                     } if (message.Contains(Lib.Commands.OTHER_TURN_MESSAGE))
                     {
                         int ind = int.Parse(message.Split()[0]);
+                        int ind_empty = int.Parse(message.Split()[1]);
+                       // MessageBox.Show(ind + " " + ind_empty);
                         string a = "r";
                         if (my_buttons == buttons_red) { a = "b"; }
-                        await MakeMove(ind, false);
+                        await MakeMove(ind, ind_empty, false);
                         message = "";
                     }
                     if (prev_m != message)
@@ -209,67 +238,76 @@ namespace Bot
                 isFinished = true;
             }
         }
-        async Task MakeMove (int i, bool my)
+        async Task MakeMove (int ind_of_button, int ind_of_empty_pos, bool my)
         {
-            double a = empty_x;
-            double b = empty_y;
+            double a = empty_pos[ind_of_empty_pos].x;
+            double b = empty_pos[ind_of_empty_pos].y;
             await Dispatcher.InvokeAsync(() =>
             {
                 if (my)
                 {
-                    empty_x = Canvas.GetLeft(my_buttons[i]);
-                    empty_y = Canvas.GetBottom(my_buttons[i]);
-                    Canvas.SetBottom(my_buttons[i], b);
-                    Canvas.SetLeft(my_buttons[i], a);
+                    empty_pos[ind_of_empty_pos].x = Canvas.GetLeft(my_buttons[ind_of_button]);
+                    empty_pos[ind_of_empty_pos].y = Canvas.GetBottom(my_buttons[ind_of_button]);
+                    Canvas.SetBottom(my_buttons[ind_of_button], b);
+                    Canvas.SetLeft(my_buttons[ind_of_button], a);
                 } else
                 {
-                    empty_x = Canvas.GetLeft(other_buttons[i]);
-                    empty_y = Canvas.GetBottom(other_buttons[i]);
-                    Canvas.SetBottom(other_buttons[i], b);
-                    Canvas.SetLeft(other_buttons[i], a);
+                    empty_pos[ind_of_empty_pos].x = Canvas.GetLeft(other_buttons[ind_of_button]);
+                    empty_pos[ind_of_empty_pos].y = Canvas.GetBottom(other_buttons[ind_of_button]);
+                    Canvas.SetBottom(other_buttons[ind_of_button], b);
+                    Canvas.SetLeft(other_buttons[ind_of_button], a);
                 }
                 
             });
             await Task.Delay(105);
 
         }
-        async Task EnableButtons()
+        async Task FindPossibleButtonIndsForMove()
         {
                 await Dispatcher.InvokeAsync(() =>
                 {
                     double x;
                     double y;
                     string a = "";
-                    for (int i = 0; i < 12; i++) {
-                        x = Canvas.GetLeft(my_buttons[i]);
-                        y = Canvas.GetBottom(my_buttons[i]);
-                        if(x == empty_x && (y - height_step == empty_y || y + height_step == empty_y))
+                    for (int i = 0; i < my_buttons.Count; i++) {
+                        for(int j = 0; j < empty_pos.Count; j++)
                         {
-                            enabled_inds.Add(i);
-                            a += i;
-                        } else if (y == empty_y && (x - width_step == empty_x || x + width_step == empty_x))
-                        {
-                            enabled_inds.Add(i);
-                            a += i;
-                        } else if (x + width_step == empty_x && (y - height_step == empty_y | y + height_step == empty_y))
-                        {
-                            enabled_inds.Add(i);
-                            a += i;
-                        }
-                        else if (y + height_step == empty_y && (x - width_step == empty_x | x + width_step == empty_x))
-                        {
-                            enabled_inds.Add(i);
-                            a += i;
-                        }
-                        else if (x - width_step == empty_x && (y - height_step == empty_y | y + height_step == empty_y))
-                        {
-                            enabled_inds.Add(i);
-                            a += i;
-                        }
-                        else if (y - height_step == empty_y && (x - width_step == empty_x | x + width_step == empty_x))
-                        {
-                            enabled_inds.Add(i);
-                            a += i;
+                            x = Canvas.GetLeft(my_buttons[i]);
+                            y = Canvas.GetBottom(my_buttons[i]);
+                            double empty_x = empty_pos[j].x;
+                            double empty_y = empty_pos[j].y;
+                            // просто шаг на пустую клетку
+                            if (x == empty_x && (y - height_step == empty_y || y + height_step == empty_y))
+                            {
+                                enabled_moves.Add(new InfoForMove(j, i));
+                                a += i;
+                            }
+                            else if (y == empty_y && (x - width_step == empty_x || x + width_step == empty_x))
+                            {
+                                enabled_moves.Add(new InfoForMove(j, i));
+                                a += i;
+                            }
+                            else if (x + width_step == empty_x && (y - height_step == empty_y | y + height_step == empty_y))
+                            {
+                                enabled_moves.Add(new InfoForMove(j, i));
+                                a += i;
+                            }
+                            else if (y + height_step == empty_y && (x - width_step == empty_x | x + width_step == empty_x))
+                            {
+                                enabled_moves.Add(new InfoForMove(j, i));
+                                a += i;
+                            }
+                            else if (x - width_step == empty_x && (y - height_step == empty_y | y + height_step == empty_y))
+                            {
+                                enabled_moves.Add(new InfoForMove(j, i));
+                                a += i;
+                            }
+                            else if (y - height_step == empty_y && (x - width_step == empty_x | x + width_step == empty_x))
+                            {
+                                enabled_moves.Add(new InfoForMove(j, i));
+                                a += i;
+                            }
+                            // съесть чужую фишку
                         }
                     }
                   //  MessageBox.Show(a);

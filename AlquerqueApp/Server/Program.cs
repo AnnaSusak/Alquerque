@@ -44,10 +44,12 @@ public class Program
                 {
                     b.Color = Color.Red;
                     Lib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_RED);
+                    
                 } else
                 {
                     b.Color = Color.Black;
                     Lib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.COLOR_MESSAGE_BLACK);
+                    
                 }
                
             }
@@ -76,6 +78,7 @@ public class Program
                 bool red_move = true;
                 bool wait = false;
                 int mv = 1;
+                int ind_of_empty = 0;
                 string message = "";
                 Random r = new Random();
                 while (true)
@@ -86,6 +89,12 @@ public class Program
                    Thread.Sleep(3000);
                    for (int i = 0; i < bot.Group.Count; i++)
                     {
+                       /* Console.WriteLine("Colors");
+                        for (int j = 0; j < bot.Group.Count; j ++)
+                        {
+                            Console.WriteLine(bot.Group[j].Color);
+                        }
+                        Console.WriteLine();*/
                             Bot b = bot.Group[i];
                             Console.WriteLine(red_move+ " " + i.ToString());
                           //  Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
@@ -93,13 +102,13 @@ public class Program
                             {
                                 //string message = Lib.BasicNetMethods.ReadDateFromNet(bot.Socket);
                                 
-                            if (red_move && bot.Color == Color.Red || !red_move && bot.Color == Color.Black)
+                                if ((red_move && b.Color == Color.Red) || (!red_move && b.Color == Color.Black))
                                 {
 
-                                    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
-                                message = Lib.BasicNetMethods.ReadDateFromNet(bot.Socket);
-                                mv = int.Parse(message);
-                                    Console.WriteLine(mv);
+                                        Lib.BasicNetMethods.SendDataToNet(b.Socket, Lib.Commands.YOUR_TURN_MESSAGE);
+                                    Console.WriteLine("Sent");
+                                    message = Lib.BasicNetMethods.ReadDateFromNet(b.Socket);
+                                
                                 
                                 //    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
                                 
@@ -118,18 +127,26 @@ public class Program
                                     }
                                 } else
                                 {
+                                    ind_of_empty = int.Parse(message.Split()[1]);
+                                    mv = int.Parse(message.Split()[0]);
+                                    Console.WriteLine(mv + " " + ind_of_empty);
                                     for (int j = 0; j < bot.Group.Count; j++)
                                     {
                                         Bot b2 = bot.Group[j];
                                         if (red_move && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
                                         {
-                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + Lib.Commands.OTHER_TURN_MESSAGE);
+                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + ind_of_empty + " " +Lib.Commands.OTHER_TURN_MESSAGE);
 
                                         }
                                     }
                                     red_move = !red_move;
                                 }
                             }
+                          /*  else
+                            {
+                                Console.WriteLine(red_move + " " + (bot.Color == Color.Red));
+                              //  i++;
+                            }*/
 
                         } catch(Exception e)
                             {
