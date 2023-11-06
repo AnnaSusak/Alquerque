@@ -112,8 +112,9 @@ public class Program
                                 
                                 //    Lib.BasicNetMethods.SendDataToNet(bot.Socket, Lib.Commands.WAIT);
                                 
-                                if (message.Contains(Lib.Commands.ILOSE.ToString()))
+                                if (message==(Lib.Commands.ILOSE.ToString()))
                                 {
+                                    Console.WriteLine(message);
                                     for (int j = 0; j < bot.Group.Count; j++)
                                     {
                                         Bot b2 = bot.Group[j];
@@ -122,21 +123,24 @@ public class Program
                                             if (b2.Color == Color.Red)
                                                 Lib.BasicNetMethods.SendDataToNet(b2.Socket, "Red win");
                                             else
+                                            {
                                                 Lib.BasicNetMethods.SendDataToNet(b2.Socket, "Black win");
+                                                Console.WriteLine("end " + (bot.Color==Color.Red));
+                                            }
                                         }
                                     }
                                 } else
                                 {
-                                    ind_of_empty = int.Parse(message.Split()[1]);
-                                    mv = int.Parse(message.Split()[0]);
-                                    Console.WriteLine(mv + " " + ind_of_empty);
+                                   // ind_of_empty = int.Parse(message.Split()[1]);
+                                  //  mv = int.Parse(message.Split()[0]);
+                                  //  Console.WriteLine(mv + " " + ind_of_empty);
                                     for (int j = 0; j < bot.Group.Count; j++)
                                     {
                                         Bot b2 = bot.Group[j];
                                         if (red_move && b2.Color == Color.Black || !red_move && b2.Color == Color.Red)
                                         {
-                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + ind_of_empty + " " +Lib.Commands.OTHER_TURN_MESSAGE);
-
+                                            //  Lib.BasicNetMethods.SendDataToNet(b2.Socket, mv.ToString() + " " + ind_of_empty + " " +Lib.Commands.OTHER_TURN_MESSAGE);
+                                            Lib.BasicNetMethods.SendDataToNet(b2.Socket, message + " " + Lib.Commands.OTHER_TURN_MESSAGE);
                                         }
                                     }
                                     red_move = !red_move;

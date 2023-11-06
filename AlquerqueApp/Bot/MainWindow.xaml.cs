@@ -192,20 +192,28 @@ namespace Bot
                                 if (my_buttons.Count != 0)
                                     await FindPossibleButtonIndsForMove();
                                 //   MessageBox.Show("found");
-                             //   MessageBox.Show(enabled_moves.Count.ToString());
-                                if (enabled_moves.Count == 0 || my_buttons.Count== 0)
+                                MessageBox.Show(enabled_moves.Count.ToString());
+                                if (enabled_moves.Count == 0 || my_buttons.Count == 0)
                                 {
                                     MessageBox.Show("Вы проиграли");
-                                    Lib.BasicNetMethods.SendDataToNet(client_socket,Lib.Commands.ILOSE.ToString());
+                                    Lib.BasicNetMethods.SendDataToNet(client_socket, Lib.Commands.ILOSE.ToString());
                                     isFinished = true;
-                                } else
+                                }
+                                else
                                 {
                                     int mv = r.Next(0, enabled_moves.Count - 1);
                                     await MakeMove(enabled_moves[mv], true);
-                                    message = "";
-                                    Lib.BasicNetMethods.SendDataToNet(client_socket, enabled_moves[mv].ind_but + " " +
-                                        enabled_moves[mv].ind_pos.ToString());
-                                }                             
+                                    string mes = enabled_moves[mv].ind_but + " " +
+                                        enabled_moves[mv].ind_pos;
+                                    if (enabled_moves[mv].eat)
+                                    {
+                                        mes += " true " + enabled_moves[mv].other_but_ind;
+                                    } else
+                                    {
+                                        mes += " false " + -1;
+                                    }
+                                    Lib.BasicNetMethods.SendDataToNet(client_socket, mes);
+                                }
                             }
                             catch (Exception e)
                             {
@@ -218,12 +226,13 @@ namespace Bot
 
                     } if (message.Contains(Lib.Commands.OTHER_TURN_MESSAGE))
                     {
-                        int ind = int.Parse(message.Split()[0]);
-                        int ind_empty = int.Parse(message.Split()[1]);
-                       // MessageBox.Show(ind + " " + ind_empty);
-                        string a = "r";
-                        if (my_buttons == buttons_red) { a = "b"; }
-                        await MakeMove(new InfoForMove(ind_empty, ind, false), false);
+                        InfoForMove inf = new InfoForMove(int.Parse(message.Split()[1]),
+                            int.Parse(message.Split()[0]), message.Split()[2] == "true",
+                            int.Parse(message.Split()[3]));
+                        // MessageBox.Show(ind + " " + ind_empty);
+                      //  string a = "r";
+                      //  if (my_buttons == buttons_red) { a = "b"; }
+                        await MakeMove(inf, false);
                         message = "";
                     }
                     if (prev_m != message)
@@ -281,6 +290,14 @@ namespace Bot
                         empty_pos[ind_of_empty_pos].y = Canvas.GetBottom(other_buttons[ind_of_button]);
                         Canvas.SetBottom(other_buttons[ind_of_button], b);
                         Canvas.SetLeft(other_buttons[ind_of_button], a);
+                        if (inf.eat)
+                        {
+
+                            empty_pos.Add(new Position(Canvas.GetLeft(my_buttons[inf.other_but_ind]),
+                                Canvas.GetBottom(my_buttons[inf.other_but_ind])));
+                            my_buttons[inf.other_but_ind].Visibility = Visibility.Hidden;
+                            my_buttons.RemoveAt(inf.other_but_ind);
+                        }
                     }
 
                 });
@@ -307,7 +324,7 @@ namespace Bot
                             double empty_x = empty_pos[j].x;
                             double empty_y = empty_pos[j].y;
 // просто шаг на пустую клетку
-                      //      MessageBox.Show("m " +i + " "+ empty_x + " " + empty_y + " " + x + " " + y);
+                          //  MessageBox.Show("m " +i + " "+ empty_x + " " + empty_y + " " + x + " " + y);
                             if (x == empty_x && (y - height_step == empty_y || y + height_step == empty_y))
                             {
                                 enabled_moves.Add(new InfoForMove(j, i, false));
@@ -339,7 +356,7 @@ namespace Bot
                                 a += i;
                             }
                             // съесть чужую фишку
-                            if(x == empty_x && y + 2 * height_step == empty_y)
+                            if(x == empty_x && y - 2 * height_step == empty_y)
                             {
                                 bool ok = false;
                                 int res_ind = 0;
@@ -354,7 +371,7 @@ namespace Bot
                                 if(ok)
                                 {
                                     enabled_moves.Add(new InfoForMove(j, i, true, res_ind));
-                                    MessageBox.Show(j + " " + i + " " + true + " " + res_ind);
+                                   // MessageBox.Show(j + " " + i + " " + true + " " + res_ind);
                                 } /*else
                                 {
                                     string cur = "";
